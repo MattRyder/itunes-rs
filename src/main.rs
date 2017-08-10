@@ -1,9 +1,11 @@
+extern crate byteorder;
+
 pub mod hdfm;
 
 use std::env;
 
 fn create_library(file: String) -> hdfm::File {
-    let library = hdfm::File::new(file);
+    let mut library = hdfm::File::new(file);
 
     match library.process() {
         Ok(res) => {
