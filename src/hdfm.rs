@@ -40,7 +40,11 @@ impl File {
         let version_length = file_data[0x10];
         let version_data = &file_data[0x11..(0x11+version_length as usize)];
         self.version = String::from_utf8(version_data.to_vec()).expect("Failed to read HDFM header version");
-        
+
+        // Calculate how much to jump over for second unknown:
+        let unk_size = self.header_size - (version_length as u32) - 17;
+        println!("Unk size: 0x{0:x}", unk_size);
+
         Result::Ok(true)
     }
 
@@ -52,5 +56,29 @@ impl File {
         let slice = &buf[offset..(offset + length)];
         let mut cursor = Cursor::new(slice);
         cursor.read_u32::<BigEndian>().unwrap()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use hdfm;
+
+    #[test]
+    fn can_create_file() {
+        let file_path = String::from("./test_data/blank.itl");
+        let expected = file_path.clone();
+        let library = hdfm::File::new(file_path);
+        
+        assert_eq!(library.path, expected);
+    }
+
+    #[test]
+    fn can_process() {
+        let file_path = String::from("./test_data/blank.itl");
+        let expected = file_path.clone();
+        let mut library = hdfm::File::new(file_path);
+
+        let res = library.process();
+        assert_eq!(res, Ok(true));
     }
 }

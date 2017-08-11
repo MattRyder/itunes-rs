@@ -6,7 +6,7 @@
             "type": "gdb",
             "request": "launch",
             "target": "./target/debug/itunes",
-            "arguments": "\"/home/eggo/iTunes Library.itl\"",
+            "arguments": "\"./test_data/library.itl\"",
             "cwd": "${workspaceRoot}"
         }
     ]
